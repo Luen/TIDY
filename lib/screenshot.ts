@@ -1,28 +1,14 @@
 'use server';
 
-import { chromium as playwright } from 'playwright-core'
-import chromium from '@sparticuz/chromium'
-
-export const getBrowser = async () => {
-  const launchConfig = {
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath(),
-    headless: chromium.headless === 'shell' ? false : chromium.headless,
-  }
-
-  if (process.env.NODE_ENV === 'production') {
-    return await playwright.launch(launchConfig);
-  }
-  return await playwright.launch(launchConfig);
-};
+import { chromium } from 'playwright-core';
 
 export async function takeScreenshot(url: string): Promise<Buffer> {
-  let browser;
+  const browser = await chromium.launch({
+    headless: true,
+  });
+
   try {
-    browser = await getBrowser();
-    const context = await browser.newContext();
-    const page = await context.newPage();
+    const page = await browser.newPage();
     await page.goto(url);
     await page.waitForLoadState('networkidle');
     await page.evaluate(() => {
@@ -31,14 +17,13 @@ export async function takeScreenshot(url: string): Promise<Buffer> {
         fbLightMode.remove();
       }
     });
-    const screenshotBuffer = await page.screenshot();
+    console.log(`Taking screenshot of ${url}`);
+    const screenshotBuffer = await page.screenshot({ fullPage: true });
     return screenshotBuffer;
   } catch (error) {
     console.error(error);
     throw new Error('Failed to take screenshot');
   } finally {
-    if (browser) {
-      await browser.close();
-    }
+    await browser.close();
   }
 }
