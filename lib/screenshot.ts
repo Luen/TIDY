@@ -1,24 +1,26 @@
 'use server';
 
+import { chromium as playwright } from 'playwright-core'
 import chromium from '@sparticuz/chromium'
-import * as playwright from 'playwright-aws-lambda';
 
 export const getBrowser = async () => {
   const launchConfig = {
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
     executablePath: await chromium.executablePath(),
-    headless: true
+    headless: chromium.headless === 'shell' ? false : chromium.headless,
   }
 
   if (process.env.NODE_ENV === 'production') {
-    return await playwright.launchChromium(launchConfig);
+    return await playwright.launch(launchConfig);
   }
-  return await playwright.launchChromium(launchConfig);
+  return await playwright.launch(launchConfig);
 };
 
 export async function takeScreenshot(url: string): Promise<Buffer> {
   let browser;
   try {
-    browser = await playwright.launchChromium({ headless: true });
+    browser = await getBrowser();
     const context = await browser.newContext();
     const page = await context.newPage();
     await page.goto(url);
