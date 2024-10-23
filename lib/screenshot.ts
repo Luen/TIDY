@@ -3,6 +3,9 @@
 import * as playwright from 'playwright-aws-lambda';
 
 export const getBrowser = async () => {
+  if (process.env.NODE_ENV === 'production') {
+    return await playwright.launchChromium({ headless: true });
+  }
   return await playwright.launchChromium({ headless: true });
 };
 
