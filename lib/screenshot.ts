@@ -17,7 +17,7 @@ export async function takeScreenshot(url: string): Promise<Buffer> {
       }
     });
     console.log(`Taking screenshot of ${url}`);
-    const screenshotBuffer = await page.screenshot();
+    const screenshotBuffer = await page.screenshot({ fullPage: true });
     return screenshotBuffer;
   } catch (error) {
     console.error(error);
