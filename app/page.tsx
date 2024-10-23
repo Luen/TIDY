@@ -1,13 +1,14 @@
 import FacebookPosts from '@/components/FacebookPosts';
 import Links from '@/components/Links';
+import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
       <div className="max-w-4xl w-full bg-white shadow-lg rounded-lg p-6 space-y-6">
+        <Links />
         <h1 className="text-3xl font-bold text-center text-green-600">TIDY</h1>
         <p className="text-xl text-center text-gray-700">Townsville Illegal Dumping Yobo&apos;s Clean-ups</p>
-        
         <div className="mission bg-gray-50 p-4 rounded-lg">
           <h2 className="text-2xl font-semibold text-gray-800 mb-2">Mission Statement</h2>
           <p className="text-gray-600 leading-relaxed">
@@ -20,9 +21,10 @@ export default function Home() {
             which may well alleviate the problem. I encourage anyone and everyone to contact the council, state, and federal MP&apos;s
             and let them know we need support to combat this environmental crime wave.
           </p>
-        </div>  
+        </div>
+        
+        <Footer />
         <FacebookPosts />
-        <Links />
       </div>
     </div>
   );

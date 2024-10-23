@@ -44,20 +44,20 @@ export default async function FacebookPosts() {
   return (
     <>
         <div className="max-w-2xl mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-6">Facebook Group Feed</h1>
         {posts.map((post, index) => (
             <PostCard key={index} post={post} />
         ))}
         </div>
-        <div className="mt-6">
-            <Image
-            src={`data:image/png;base64,${base64Image}`}
-            alt="Tidy Up Townsville Facebook group"
-            width={800}
-            height={600}
-            className="rounded-lg shadow-md mx-auto"
-            />
-        </div>
+        <div className="relative mt-6 w-[800px] h-[700px] overflow-hidden mx-auto">
+          <Image
+              src={`data:image/png;base64,${base64Image}`}
+              alt="Tidy Up Townsville Facebook group"
+              width={800}
+              height={700}
+              className="absolute top-[-40px] left-0 w-full"
+          />
+      </div>
+
     </>
   )
 }
