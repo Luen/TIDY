@@ -1,5 +1,3 @@
-// next.config.js
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   webpack: (config: { externals: string[] | { [key: string]: string }; }, { isServer }: { isServer: boolean }) => {
