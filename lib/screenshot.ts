@@ -1,22 +1,17 @@
 'use server';
 
-import { chromium } from 'playwright-core';
-import chromiumAWS from '@sparticuz/chromium';
+import * as playwright from 'playwright-aws-lambda';
+
+export const getBrowser = async () => {
+  return await playwright.launchChromium({ headless: true });
+};
 
 export async function takeScreenshot(url: string): Promise<Buffer> {
-  const isDev = process.env.NODE_ENV !== 'production';
-  const executablePath = isDev
-    ? undefined // Use local Chromium in development
-    : await chromiumAWS.executablePath();
-
-  const browser = await chromium.launch({
-    args: chromiumAWS.args,
-    executablePath,
-    headless: chromiumAWS.headless === true,
-  });
-
+  let browser;
   try {
-    const page = await browser.newPage();
+    browser = await playwright.launchChromium({ headless: true });
+    const context = await browser.newContext();
+    const page = await context.newPage();
     await page.goto(url);
     await page.waitForLoadState('networkidle');
     await page.evaluate(() => {
@@ -31,6 +26,8 @@ export async function takeScreenshot(url: string): Promise<Buffer> {
     console.error(error);
     throw new Error('Failed to take screenshot');
   } finally {
-    await browser.close();
+    if (browser) {
+      await browser.close();
+    }
   }
 }
