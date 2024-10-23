@@ -1,16 +1,12 @@
+// next.config.js
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack: (config: { externals: string[] | { [key: string]: string }; }, { isServer }: { isServer: boolean }) => {
+  webpack: (config: import('webpack').Configuration, { isServer }: { isServer: boolean }) => {
     if (!isServer) {
-      // Prevent bundling of server-side modules on the client
-      config.externals = config.externals || [];
-      if (Array.isArray(config.externals)) {
-        config.externals.push('@sparticuz/chromium', 'playwright-core');
-      } else if (typeof config.externals === 'object') {
-        config.externals['@sparticuz/chromium'] = '@sparticuz/chromium';
-        config.externals['playwright-core'] = 'playwright-core';
-      } else {
-        config.externals = ['@sparticuz/chromium', 'playwright-core'];
+      // Prevent `playwright` from being included in the client bundle
+      if (config.resolve && config.resolve.alias) {
+        (config.resolve.alias as { [key: string]: string | false })['playwright'] = false;
       }
     }
     return config;

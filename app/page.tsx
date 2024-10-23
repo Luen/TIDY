@@ -1,10 +1,10 @@
 import Image from 'next/image';
-import { takeScreenshot } from '../lib/screenshot';
 
 export const revalidate = 86400; // Revalidate once a day (in seconds)
 
 export default async function Home() {
-  const screenshotBuffer = await takeScreenshot('https://example.com');
+  const { takeScreenshot } = await import('../lib/screenshot');
+  const screenshotBuffer = await takeScreenshot('https://www.facebook.com/groups/1044042929275742');
   const base64Image = screenshotBuffer.toString('base64');
 
   return (

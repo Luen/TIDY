@@ -1,10 +1,12 @@
 {
     "functions": {
       "app/api/**/route.ts": {
+        "runtime": "nodejs18.x",
         "memory": 1024,
         "maxDuration": 30
       },
       "app/**/page.tsx": {
+        "runtime": "nodejs18.x",
         "memory": 1024,
         "maxDuration": 30
       }
