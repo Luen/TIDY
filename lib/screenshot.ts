@@ -2,16 +2,19 @@ import { chromium } from 'playwright-core';
 import chromiumAWS from '@sparticuz/chromium';
 
 export async function takeScreenshot(url: string): Promise<Buffer> {
-  const isProduction = process.env.NODE_ENV === 'production';
-  const executablePath = isProduction
+  // Detect if we're in the build phase
+  const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
+  if (isBuild) {
+    // Return a placeholder image or empty buffer during build
+    return Buffer.from('');
+  }
+
+  const isVercel = !!process.env.VERCEL;
+  const executablePath = isVercel
     ? await chromiumAWS.executablePath()
     : undefined; // Use local Chromium in development
 
-  // Ensure headless is a boolean
-  const headless =
-    typeof chromiumAWS.headless === 'boolean'
-      ? chromiumAWS.headless
-      : String(chromiumAWS.headless) === 'true';
+  const headless = true; // Ensure headless is a boolean
 
   const browser = await chromium.launch({
     args: chromiumAWS.args,
@@ -21,6 +24,7 @@ export async function takeScreenshot(url: string): Promise<Buffer> {
 
   try {
     const page = await browser.newPage();
+    console.log(`Taking screenshot of ${url}`);
     await page.goto(url);
     const screenshotBuffer = await page.screenshot();
     return screenshotBuffer;
