@@ -23,6 +23,11 @@ const nextConfig: NextConfig = {
         pathname: '/**',
         search: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'scontent.*.fna.fbcdn.net',
+        pathname: '/**',
+      }
     ],
   },
   // Nginx will do gzip compression. We disable
