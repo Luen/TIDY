@@ -38,9 +38,10 @@ export async function scrapeFacebookGroup(url: string): Promise<{ buffer: Buffer
     if (await loginPrompt.count() > 0) {
       // Delete cookies file, if exists, as they are invalid
       if (fs.existsSync(cookiesPath)) {
+        console.log('Deleting invalid cookies file...');
         fs.unlinkSync(cookiesPath);
       }
-      //console.log("'You must log in to continue.' message found. Attempting to log in...");
+      console.log("'You must log in to continue.' message found. Attempting to log in...");
 
       // Retrieve Facebook credentials from environment variables
       const email = process.env.FACEBOOK_EMAIL;
