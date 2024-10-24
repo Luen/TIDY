@@ -55,7 +55,7 @@ export async function scrapeFacebookGroup(url: string): Promise<{ buffer: Buffer
       await page.click('button[name="login"]');
 
       // Wait for the login process to complete
-      const locator = page.locator('<h1[dir="auto"].html-h1').first();
+      const locator = page.locator('h1[dir="auto"].html-h1').first();
       await expect(locator).toHaveText('TIDY Up Townsville Group');
 
       // Check if login was successful
