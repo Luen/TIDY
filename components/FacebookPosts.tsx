@@ -2,8 +2,6 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from 'next/image'
 
-export const revalidate = 86400; // Revalidate once a day (in seconds)
-
 interface Post {
   author: string;
   content: string;

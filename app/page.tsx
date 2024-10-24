@@ -4,6 +4,8 @@ import FacebookPosts from '@/components/FacebookPosts';
 import Links from '@/components/Links';
 import Footer from '@/components/Footer';
 
+export const revalidate = 86400; // Revalidate once a day (in seconds)
+
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
