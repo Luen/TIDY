@@ -36,9 +36,10 @@ export default function Home() {
           </p>
         </div>
         <div className="text-center">
-          <Link href="https://www.abc.net.au/news/2020-06-05/test-illegal-dumping-community/12042764">ABC News Article</Link>
-          <Link href="https://www.facebook.com/watch/?v=2811958278925996">ABC North Queensland - Have you noticed any illegal dumping?</Link>
-          <Link href="https://wanderstories.space/leave-no-trace/">How to Leave No Trace</Link>
+          <Link href="https://www.abc.net.au/news/2020-06-05/test-illegal-dumping-community/12042764">Townsville yobbos&apos; illegal dumping tackled by community clean-up group - ABC News</Link>
+          <Link href="https://www.facebook.com/watch/?v=2811958278925996">Have you noticed any illegal dumping? - ABC North Queensland</Link>
+          <Link href="https://climatesafety.info/thesustainablehour501/">Encouraging people to do the right thing - Centre for Climate Safety</Link>
+          <Link href="https://wanderstories.space/leave-no-trace/">How to Leave No Trace - Wanderstories</Link>
         </div>
         <Contact />
         <FacebookPosts />
