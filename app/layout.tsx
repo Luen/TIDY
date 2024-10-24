@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "TIDY - Townsville Illegal Dumping Yobo's Clean-ups",
+  title: "TIDY Up - Townsville Illegal Dumping Yobo's Clean-ups",
   description: "Townsville Illegal Dumping Yobo's Clean-ups",
 };
 

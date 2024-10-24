@@ -62,6 +62,7 @@ export async function scrapeFacebookGroup(url: string): Promise<{ buffer: Buffer
       await new Promise((resolve) => setTimeout(resolve, 1000*5));
 
       // Check if login was successful
+      const loginPrompt = await page.locator("text=You must log in to continue.").first();
       if (await loginPrompt.count() > 0) {
         console.log("'You must log in to continue.' message still found after login attempt. Aborting...");
         return { buffer: Buffer.from(''), posts: [] };
@@ -100,7 +101,11 @@ export async function scrapeFacebookGroup(url: string): Promise<{ buffer: Buffer
       return elements
         .map(post => {
           const contentElement = post.querySelector('div[dir="auto"]');
-          const content = contentElement?.textContent?.trim() ?? '';
+          let content = contentElement?.textContent?.trim() ?? '';
+          const seeMore = 'See more';
+          if (content.endsWith(seeMore)) {
+            content = content.slice(0, content.length - seeMore.length).trim();
+          }
 
           const authorElement = post.querySelector('h2 strong span');
           const author = authorElement?.textContent?.trim() ?? '';

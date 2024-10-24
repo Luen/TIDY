@@ -39,7 +39,7 @@ function PostCard({ post }: { post: Post }) {
 
 export default async function FacebookPosts() {
     const { scrapeFacebookGroup } = await import('../lib/scrapeFacebookGroup');
-    const { buffer, posts}  = await scrapeFacebookGroup('https://www.facebook.com/groups/1044042929275742');
+    const { buffer, posts }  = await scrapeFacebookGroup('https://www.facebook.com/groups/1044042929275742');
     const base64Image = buffer.toString('base64');
   return (
     <>
