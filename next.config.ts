@@ -1,7 +1,8 @@
 import type { NextConfig } from 'next';
-// import path from 'path';
 
 const nextConfig: NextConfig = {
+  // Increase build time limit
+  staticPageGenerationTimeout: 100,
   // Recommended: this will reduce output
   // Docker image size by 80%+
   output: 'standalone',

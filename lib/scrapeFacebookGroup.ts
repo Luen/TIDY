@@ -1,6 +1,10 @@
 'use server';
 
+import { expect } from '@playwright/test';
 import { chromium } from 'playwright-core';
+import fs from 'fs';
+
+const cookiesPath = 'facebook-cookies.json';
 
 interface Post {
   author: string;
@@ -9,21 +13,71 @@ interface Post {
   imageUrl: string;
 }
 
-export async function scrapeFacebookGroup(url: string): Promise<{ buffer: Buffer, posts: Post[] }> {
+export async function scrapeFacebookGroup(url: string): Promise<{ buffer: Buffer; posts: Post[] }> {
   const browser = await chromium.launch({
     headless: true,
   });
 
   try {
-    const page = await browser.newPage();
-    await page.goto(url);
-    await page.waitForLoadState('networkidle');
-    await page.waitForSelector('div[aria-label="Close"]', { timeout: 10000 });
-    await page.click('div[aria-label="Close"]');
+    console.log('Scraping Facebook', url);
+    const context = await browser.newContext({
+      viewport: { width: 1280, height: 720 },
+    });
+
+    const page = await context.newPage();
+
+    // If cookies exist, load them
+    if (fs.existsSync(cookiesPath)) {
+      const cookies = JSON.parse(fs.readFileSync(cookiesPath, 'utf-8'));
+      await context.addCookies(cookies);
+    }
+    
+    await page.goto(url, { waitUntil: 'networkidle' });
+
+    const loginPrompt = await page.locator("text=You must log in to continue.").first();
+    if (await loginPrompt.count() > 0) {
+      // Delete cookies file, if exists, as they are invalid
+      if (fs.existsSync(cookiesPath)) {
+        fs.unlinkSync(cookiesPath);
+      }
+      //console.log("'You must log in to continue.' message found. Attempting to log in...");
+
+      // Retrieve Facebook credentials from environment variables
+      const email = process.env.FACEBOOK_EMAIL;
+      const password = process.env.FACEBOOK_PASSWORD;
+      if (!email || !password) {
+        throw new Error('Facebook credentials are not set in environment variables.');
+      }
+
+      // Fill in login form and submit
+      await page.fill('input#email', email);
+      await page.fill('input#pass', password);
+      await page.click('button[name="login"]');
+
+      // Wait for the login process to complete
+      const locator = page.locator('<h1[dir="auto"].html-h1').first();
+      await expect(locator).toHaveText('TIDY Up Townsville Group');
+
+      // Check if login was successful
+      if (await loginPrompt.count() > 0) {
+        console.log("'You must log in to continue.' message still found after login attempt. Aborting...");
+        return { buffer: Buffer.from(''), posts: [] };
+      } else {
+        // Save Facebook login cookies
+        const cookies = await context.cookies();
+        fs.writeFileSync(cookiesPath, JSON.stringify(cookies, null, 2));
+      }
+    }
+
+    // Remove login prompt or any modal if present
     await page.evaluate(() => {
-      const fbLoginPrompt = document.querySelector('div[data-nosnippet]');
-      if (fbLoginPrompt) {
-        fbLoginPrompt.remove();
+      const modal = document.querySelector('div[aria-label="Close"]');
+      if (modal) {
+        (modal as HTMLElement).click();
+        const fbLoginPrompt = document.querySelector('div[data-nosnippet]');
+        if (fbLoginPrompt) {
+          fbLoginPrompt.remove();
+        }
       }
     });
     await page.evaluate(() => {
@@ -32,36 +86,34 @@ export async function scrapeFacebookGroup(url: string): Promise<{ buffer: Buffer
         fbLightMode.remove();
       }
     });
-    await new Promise((resolve) => setTimeout(resolve, 55000));
-    await page.waitForSelector('div[role="feed"]', { timeout: 10000 });
+    await new Promise((resolve) => setTimeout(resolve, 1000*60));
+    await page.evaluate(() => {
+      window.scrollBy(0, window.innerHeight*2);
+    });
+
+    // Wait for the feed to load and extract posts
+    await page.waitForSelector('div[role="feed"]', { timeout: 5000 });
     const posts = await page.$$eval('div[role="feed"] > div', elements => {
       return elements
-          .map(post => {
-              // Extract the post text
-              const contentElement = post.querySelector('div[dir="auto"]');
-              const content = contentElement?.textContent?.trim() ?? '';
-  
-              // Extract the author's name if available
-              const authorElement = post.querySelector('h2 strong span');
-              const author = authorElement?.textContent?.trim() ?? '';
-  
-              // Extract post timestamp if available
-              const timeElement = post.querySelector('a[aria-label*="Time"]');
-              const time = timeElement?.textContent?.trim() ?? '';
-  
-              // Extract image URL if present
-              const imageElement = post.querySelector('img');
-              const imageUrl = imageElement ? imageElement.src : '';
-  
-              // Return the structured post object
-              return { author, content, time, imageUrl };
-          })
-          .filter(post => post.author && post.content); // Filter out posts with blank author or content
-      });
-  
-    console.log(posts);
+        .map(post => {
+          const contentElement = post.querySelector('div[dir="auto"]');
+          const content = contentElement?.textContent?.trim() ?? '';
 
-    console.log(`Taking screenshot of ${url}`);
+          const authorElement = post.querySelector('h2 strong span');
+          const author = authorElement?.textContent?.trim() ?? '';
+
+          const timeElement = post.querySelector('a[aria-label*="Time"]');
+          const time = timeElement?.textContent?.trim() ?? '';
+
+          const imageElement = post.querySelector('img');
+          const imageUrl = imageElement ? (imageElement as HTMLImageElement).src : '';
+
+          return { author, content, time, imageUrl };
+        })
+        .filter(post => post.author && post.content);
+    });
+
+    // Take a screenshot of the page
     const screenshotBuffer = await page.screenshot({ fullPage: true });
 
     return {
@@ -69,8 +121,8 @@ export async function scrapeFacebookGroup(url: string): Promise<{ buffer: Buffer
       posts: posts,
     };
   } catch (error) {
-    console.error(error);
-    throw new Error('Failed to take screenshot');
+    console.error('An error occurred during scraping:', error);
+    throw new Error('Failed to scrape the Facebook group.');
   } finally {
     await browser.close();
   }

@@ -5,3 +5,7 @@ services:
       - '3000:3000'
     environment:
       - NODE_ENV=production
+      - NEXT_BUILD_TIMEOUT=180000
+      - FACEBOOK_EMAIL=your_facebook_email
+      - FACEBOOK_PASSWORD=your_facebook_password
+      - NEXT_BUILD_TIMEOUT=180000
