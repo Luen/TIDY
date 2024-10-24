@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import FacebookPosts from '@/components/FacebookPosts';
 import Links from '@/components/Links';
-import Footer from '@/components/Footer';
+import Contact from '@/components/Contact';
 
 export const revalidate = 86400; // Revalidate once a day (in seconds)
 
@@ -35,7 +35,12 @@ export default function Home() {
             - Dave Dudley
           </p>
         </div>
-        <Footer />
+        <div className="text-center">
+          <Link href="https://www.abc.net.au/news/2020-06-05/test-illegal-dumping-community/12042764">ABC News Article</Link>
+          <Link href="https://www.facebook.com/watch/?v=2811958278925996">ABC North Queensland - Have you noticed any illegal dumping?</Link>
+          <Link href="https://wanderstories.space/leave-no-trace/">How to Leave No Trace</Link>
+        </div>
+        <Contact />
         <FacebookPosts />
         <Image 
           src="/images/TIDY-Up-Townsville-3-original.jpg"

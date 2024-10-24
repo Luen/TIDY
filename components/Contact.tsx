@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import SocialIcons from './SocialIcons';
 
-export default function Footer() {
+export default function Contact() {
     return (
         <div className="contact text-center mt-6">
             <SocialIcons />
