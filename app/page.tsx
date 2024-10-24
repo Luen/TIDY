@@ -38,12 +38,14 @@ export default function Home() {
         <Image 
           src="/images/TIDY-Up-Townsville-3-original.jpg"
           alt="Illegal dumping in Townsville"
-          width={800}
-          height={600}
-          className="rounded-lg"
+          width={500}
+          height={500}
+          className="rounded-lg mx-auto"
         />
         <div className="text-center text-gray-500 text-sm">
-          Website build daily by <Link href="https://wanderstories.space/author/luen/">Luen Warneke</Link> &copy; {new Date().getFullYear()}
+          Built daily with Next.js
+          <br />
+          <Link href="https://wanderstories.space/author/luen/">Luen Warneke</Link> &copy; {new Date().getFullYear()}
         </div>
       </div>
     </div>
