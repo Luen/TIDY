@@ -58,6 +58,8 @@ export async function scrapeFacebookGroup(url: string): Promise<{ buffer: Buffer
       const locator = page.locator('h1[dir="auto"].html-h1').first();
       await expect(locator).toHaveText('TIDY Up Townsville Group');
 
+      await new Promise((resolve) => setTimeout(resolve, 1000*5));
+
       // Check if login was successful
       if (await loginPrompt.count() > 0) {
         console.log("'You must log in to continue.' message still found after login attempt. Aborting...");
@@ -86,7 +88,7 @@ export async function scrapeFacebookGroup(url: string): Promise<{ buffer: Buffer
         fbLightMode.remove();
       }
     });
-    await new Promise((resolve) => setTimeout(resolve, 1000*60));
+    await new Promise((resolve) => setTimeout(resolve, 1000*75));
     await page.evaluate(() => {
       window.scrollBy(0, window.innerHeight*2);
     });
