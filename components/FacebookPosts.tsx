@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from 'next/image'
+import { unstable_cache } from 'next/cache';
 
 interface Post {
   author: string;
@@ -35,10 +36,16 @@ function PostCard({ post }: { post: Post }) {
   )
 }
 
+const scrapeCachedPosts = unstable_cache(async () => {
+  const { scrapeFacebookGroup } = await import('@/lib/scrapeFacebookGroup');
+  return await scrapeFacebookGroup('https://www.facebook.com/groups/1044042929275742');
+}, [], { revalidate: 86400 });
+
+
 export default async function FacebookPosts() {
-    const { scrapeFacebookGroup } = await import('../lib/scrapeFacebookGroup');
-    const { buffer, posts }  = await scrapeFacebookGroup('https://www.facebook.com/groups/1044042929275742');
-    const base64Image = buffer.toString('base64');
+  const { buffer, posts } = await scrapeCachedPosts();
+  const base64Image = buffer.toString('base64');
+
   return (
     <>
         <div className="max-w-2xl mx-auto p-4">
