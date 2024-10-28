@@ -15,14 +15,16 @@ export default function Home() {
           alt="Tidy Up Townsville"
           width={324}
           height={100}
-          className="rounded-lg mx-auto"
+          className="rounded-lg mx-auto w-full sm:w-auto"
         />
         <Links />
         <h1 className="text-3xl font-bold text-center text-green-600">TIDY Up</h1>
-        <p className="text-xl text-center text-gray-700">Townsville Illegal Dumping Yobo&apos;s Clean-ups</p>
+        <p className="text-xl text-center text-gray-700">
+          Townsville Illegal Dumping Yobo&apos;s Clean-ups
+        </p>
         <div className="mission bg-gray-50 p-4 rounded-lg">
           <h2 className="text-2xl font-semibold text-gray-800 mb-2">Mission Statement</h2>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
             The purpose of this site is to raise awareness and try and combat Illegal Dumping in Townsville. I also want
             to clean it up; I see it as everyone&apos;s problem, not just a council problem. The town is growing, the escape
             areas are shrinking, and landholders are locking up because of the grubs. This dumping will ultimately impact 
@@ -35,20 +37,55 @@ export default function Home() {
             - Dave Dudley
           </p>
         </div>
-        <div className="text-center">
-          <Link href="https://www.abc.net.au/news/2020-06-05/test-illegal-dumping-community/12042764">Townsville yobbos&apos; illegal dumping tackled by community clean-up group - ABC News</Link>
-          <Link href="https://www.facebook.com/watch/?v=2811958278925996">Have you noticed any illegal dumping? - ABC North Queensland</Link>
-          <Link href="https://climatesafety.info/thesustainablehour501/">Encouraging people to do the right thing - Centre for Climate Safety</Link>
-          <Link href="https://wanderstories.space/leave-no-trace/">How to Leave No Trace - Wanderstories</Link>
-        </div>
         <Contact />
+        <div className="text-center space-y-6 p-6 bg-gray-50 rounded-lg shadow-md max-w-lg mx-auto">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Related Links</h2>
+          <ul className="space-y-6">
+            <li className="bg-white p-4 rounded-md shadow flex flex-col items-start">
+              <Link href="https://www.abc.net.au/news/2020-06-05/test-illegal-dumping-community/12042764" className="text-blue-600 hover:text-blue-800 transition-colors flex items-center space-x-3">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2 2a1 1 0 001.414-1.414L11 10.586V6z" clipRule="evenodd" />
+                </svg>
+                <span className="text-lg font-medium">Townsville yobbos' illegal dumping tackled by community clean-up group</span>
+              </Link>
+              <span className="text-sm text-gray-500 mt-2">ABC News</span>
+            </li>
+            <li className="bg-white p-4 rounded-md shadow flex flex-col items-start">
+              <Link href="https://www.facebook.com/watch/?v=2811958278925996" className="text-blue-600 hover:text-blue-800 transition-colors flex items-center space-x-3">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2 2a1 1 0 001.414-1.414L11 10.586V6z" clipRule="evenodd" />
+                </svg>
+                <span className="text-lg font-medium">Have you noticed any illegal dumping?</span>
+              </Link>
+              <span className="text-sm text-gray-500 mt-2">ABC North Queensland</span>
+            </li>
+            <li className="bg-white p-4 rounded-md shadow flex flex-col items-start">
+              <Link href="https://climatesafety.info/thesustainablehour501/" className="text-blue-600 hover:text-blue-800 transition-colors flex items-center space-x-3">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2 2a1 1 0 001.414-1.414L11 10.586V6z" clipRule="evenodd" />
+                </svg>
+                <span className="text-lg font-medium">Encouraging people to do the right thing</span>
+              </Link>
+              <span className="text-sm text-gray-500 mt-2">Centre for Climate Safety</span>
+            </li>
+            <li className="bg-white p-4 rounded-md shadow flex flex-col items-start">
+              <Link href="https://wanderstories.space/leave-no-trace/" className="text-blue-600 hover:text-blue-800 transition-colors flex items-center space-x-3">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2 2a1 1 0 001.414-1.414L11 10.586V6z" clipRule="evenodd" />
+                </svg>
+                <span className="text-lg font-medium">How to Leave No Trace</span>
+              </Link>
+              <span className="text-sm text-gray-500 mt-2">Wanderstories</span>
+            </li>
+          </ul>
+        </div>
         <FacebookPosts />
         <Image 
           src="/images/TIDY-Up-Townsville-3-original.jpg"
           alt="Illegal dumping in Townsville"
           width={500}
           height={500}
-          className="rounded-lg mx-auto"
+          className="rounded-lg mx-auto w-full sm:w-auto"
         />
         <div className="text-center text-gray-500 text-sm">
           Built daily with Next.js
