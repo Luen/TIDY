@@ -58,8 +58,8 @@ export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] 
       await page.click('button[name="login"]');
 
       // Wait for the login process to complete
-      const locator = page.locator('h1[dir="auto"].html-h1').first();
-      await expect(locator).toHaveText('TIDY Up Townsville Group');
+      const locatorElement = page.locator('h1[dir="auto"].html-h1').first();
+      await expect(locatorElement).toHaveText("TIDY Up Townsville Group", { timeout: 15000 });
 
       await new Promise((resolve) => setTimeout(resolve, 1000*5));
 
