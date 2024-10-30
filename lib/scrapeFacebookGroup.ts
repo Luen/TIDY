@@ -114,7 +114,8 @@ export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] 
             .replace(/<\/span>/g, '')
             .replace(/<a.*?>/g, '')
             .replace(/<\/a>/g, '')
-            .replace(/<img.*?>/g, '');
+            .replace(/<img.*?>/g, '')
+            .replace(/<!--.*?-->/g, '');
           const seeMore = 'See more';
           if (content.endsWith(seeMore)) {
             content = content.slice(0, content.length - seeMore.length).trim();
