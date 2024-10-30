@@ -133,8 +133,10 @@ export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] 
             .map(link => link.textContent?.trim() ?? '')
             .find(text => /^\d+[hmd]$/.test(text) || /^\d{1,2}:\d{2}\s?[AaPp]\.?[Mm]\.?$/.test(text)) ?? '';
 
-          const postLinkElement = post.querySelector('a[role="link"][href*="facebook.com"]');
-          const postLink = postLinkElement ? postLinkElement.getAttribute('href') ?? '' : '';
+          const postLinkElements = post.querySelectorAll('a[role="link"][href*="facebook.com"]');
+          const postLink = Array.from(postLinkElements)
+            .map(el => el.getAttribute('href') ?? '')
+            .find(href => !href.includes('help/')) || '';
 
           const imageUrls = Array.from(post.querySelectorAll('img'))
             .map(image => image.src)
