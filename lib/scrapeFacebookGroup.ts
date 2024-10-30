@@ -63,18 +63,22 @@ export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] 
       await expect(locatorElement).toHaveText("TIDY Up Townsville Group", { timeout: 15000 });
 
       await new Promise((resolve) => setTimeout(resolve, 1000*5));
+      await page.waitForTimeout(5000);
 
       // Check if login was successful
-      const loginPrompt = await page.locator("text=You must log in to continue.").first();
-      if (await loginPrompt.count() > 0) {
+      const loginStillRequired = await page.locator("text=You must log in to continue.").count();
+      if (loginStillRequired > 0) {
         console.log("'You must log in to continue.' message still found after login attempt. Aborting...");
         return { posts: [] };
       } else {
         // Save Facebook login cookies
-        console.log('Saving cookies...');
+        console.log('Saving cookies after successful login...');
         const cookies = await context.cookies();
         fs.writeFileSync(cookiesPath, JSON.stringify(cookies, null, 2));
+        console.log('Cookies saved successfully');
       }
+    } else {
+      console.log('Login not required, using stored cookies');
     }
 
     // Remove login prompt or any modal if present
