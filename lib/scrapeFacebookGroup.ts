@@ -30,6 +30,7 @@ export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] 
 
     // If cookies exist, load them
     if (fs.existsSync(cookiesPath)) {
+      console.log('Loading cookies...');
       const cookies = JSON.parse(fs.readFileSync(cookiesPath, 'utf-8'));
       await context.addCookies(cookies);
     }
@@ -70,6 +71,7 @@ export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] 
         return { posts: [] };
       } else {
         // Save Facebook login cookies
+        console.log('Saving cookies...');
         const cookies = await context.cookies();
         fs.writeFileSync(cookiesPath, JSON.stringify(cookies, null, 2));
       }
@@ -109,7 +111,8 @@ export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] 
             .replace(/<\/div>/g, '\n')
             .replace(/\n\n/g, '\n')
             .replace(/<span.*?>/g, '')
-            .replace(/<\/span>/g, '');
+            .replace(/<\/span>/g, '')
+            .replace(/<img.*?>/g, '');
           const seeMore = 'See more';
           if (content.endsWith(seeMore)) {
             content = content.slice(0, content.length - seeMore.length).trim();
