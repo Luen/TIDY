@@ -112,6 +112,8 @@ export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] 
             .replace(/\n\n/g, '\n')
             .replace(/<span.*?>/g, '')
             .replace(/<\/span>/g, '')
+            .replace(/<a.*?>/g, '')
+            .replace(/<\/a>/g, '')
             .replace(/<img.*?>/g, '');
           const seeMore = 'See more';
           if (content.endsWith(seeMore)) {

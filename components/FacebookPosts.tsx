@@ -35,6 +35,9 @@ function PostCard({ post }: { post: Post }) {
             height={200}
           />
         ))}
+        {post.postLink && (
+          <a href={post.postLink} target="_blank" className="text-blue-500 hover:underline">View on Facebook</a>
+        )}
       </CardContent>
     </Card>
   )
