@@ -3,17 +3,19 @@
 import { expect } from '@playwright/test';
 import { chromium } from 'playwright-core';
 import fs from 'fs';
+import path from 'path';
 
-const cookiesPath = 'facebook-cookies.json';
+const cookiesPath = path.join(process.cwd(), 'facebook-cookies.json');
 
 interface Post {
+  postLink: string;
   author: string;
   content: string;
   time: string;
-  imageUrl: string;
+  imageUrls: string[];
 }
 
-export async function scrapeFacebookGroup(url: string): Promise<{ buffer: Buffer; posts: Post[] }> {
+export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] }> {
   const browser = await chromium.launch({
     headless: true,
   });
@@ -65,7 +67,7 @@ export async function scrapeFacebookGroup(url: string): Promise<{ buffer: Buffer
       const loginPrompt = await page.locator("text=You must log in to continue.").first();
       if (await loginPrompt.count() > 0) {
         console.log("'You must log in to continue.' message still found after login attempt. Aborting...");
-        return { buffer: Buffer.from(''), posts: [] };
+        return { posts: [] };
       } else {
         // Save Facebook login cookies
         const cookies = await context.cookies();
@@ -101,7 +103,13 @@ export async function scrapeFacebookGroup(url: string): Promise<{ buffer: Buffer
       return elements
         .map(post => {
           const contentElement = post.querySelector('div[dir="auto"]');
-          let content = contentElement?.textContent?.trim() ?? '';
+          let content = contentElement?.innerHTML?.trim() ?? '';
+          content = content
+            .replace(/<div.*?>/g, '')
+            .replace(/<\/div>/g, '\n')
+            .replace(/\n\n/g, '\n')
+            .replace(/<span.*?>/g, '')
+            .replace(/<\/span>/g, '');
           const seeMore = 'See more';
           if (content.endsWith(seeMore)) {
             content = content.slice(0, content.length - seeMore.length).trim();
@@ -110,22 +118,23 @@ export async function scrapeFacebookGroup(url: string): Promise<{ buffer: Buffer
           const authorElement = post.querySelector('h2 strong span');
           const author = authorElement?.textContent?.trim() ?? '';
 
-          const timeElement = post.querySelector('a[aria-label*="Time"]');
-          const time = timeElement?.textContent?.trim() ?? '';
+          const time = Array.from(post.querySelectorAll('div span'))
+            .map(link => link.textContent?.trim() ?? '')
+            .find(text => /^\d+[hmd]$/.test(text) || /^\d{1,2}:\d{2}\s?[AaPp]\.?[Mm]\.?$/.test(text)) ?? '';
 
-          const imageElement = post.querySelector('img');
-          const imageUrl = imageElement ? (imageElement as HTMLImageElement).src : '';
+          const postLinkElement = post.querySelector('a[role="link"][href*="facebook.com"]');
+          const postLink = postLinkElement ? postLinkElement.getAttribute('href') ?? '' : '';
 
-          return { author, content, time, imageUrl };
+          const imageUrls = Array.from(post.querySelectorAll('img'))
+            .map(image => image.src)
+            .filter(src => src.startsWith('https://scontent'));
+
+          return { postLink, author, content, time, imageUrls };
         })
         .filter(post => post.author && post.content);
     });
 
-    // Take a screenshot of the page
-    const screenshotBuffer = await page.screenshot({ fullPage: true });
-
     return {
-      buffer: screenshotBuffer,
       posts: posts,
     };
   } catch (error) {

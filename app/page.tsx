@@ -4,7 +4,7 @@ import FacebookPosts from '@/components/FacebookPosts';
 import Links from '@/components/Links';
 import Contact from '@/components/Contact';
 
-export const revalidate = 86400; // Revalidate once a day (in seconds)
+export const revalidate = 3600; //86400; // Revalidate once a day (in seconds)
 
 export default function Home() {
   return (
@@ -46,7 +46,7 @@ export default function Home() {
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2 2a1 1 0 001.414-1.414L11 10.586V6z" clipRule="evenodd" />
                 </svg>
-                <span className="text-lg font-medium">Townsville yobbos' illegal dumping tackled by community clean-up group</span>
+                <span className="text-lg font-medium">Townsville yobbos&apos; illegal dumping tackled by community clean-up group</span>
               </Link>
               <span className="text-sm text-gray-500 mt-2">ABC News</span>
             </li>
