@@ -88,7 +88,7 @@ export default function Home() {
           className="rounded-lg mx-auto w-full sm:w-auto"
         />
         <div className="text-center text-gray-500 text-sm">
-          <Link href="https://wanderstories.space/author/luen/">Luen Warneke</Link> &copy; {new Date().getFullYear()}
+          Built by <Link href="https://wanderstories.space/author/luen/">Luen Warneke</Link> &copy; {new Date().getFullYear()}
         </div>
       </div>
     </div>
