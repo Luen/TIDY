@@ -88,8 +88,6 @@ export default function Home() {
           className="rounded-lg mx-auto w-full sm:w-auto"
         />
         <div className="text-center text-gray-500 text-sm">
-          Built daily with Next.js
-          <br />
           <Link href="https://wanderstories.space/author/luen/">Luen Warneke</Link> &copy; {new Date().getFullYear()}
         </div>
       </div>
