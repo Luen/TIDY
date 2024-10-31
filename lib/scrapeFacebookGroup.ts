@@ -122,8 +122,8 @@ export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] 
             .replace(/<!--.*?-->/g, '')
             .trim();
           const seeMore = 'See more';
-          if (content.endsWith(seeMore)) {
-            content = content.slice(0, content.length - seeMore.length).trim();
+          if (content.trim().endsWith(seeMore)) {
+            content = content.trim().slice(0, content.length - seeMore.length).trim();
           }
 
           const authorElement = post.querySelector('h2 strong span');
@@ -133,15 +133,13 @@ export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] 
             .map(link => link.textContent?.trim() ?? '')
             .find(text => /^\d+[hmd]$/.test(text) || /^\d{1,2}:\d{2}\s?[AaPp]\.?[Mm]\.?$/.test(text)) ?? '';
 
-
-          const postLinkElements = post.querySelectorAll('a[role="link"][href*="facebook.com"]');
-
-          const permalinkLinks = Array.from(postLinkElements)
+          const postLinkElements = Array.from(post.querySelectorAll('a[role="link"][href*="facebook.com"]'));
+          const permalinkLinks = postLinkElements
             .map(el => el.getAttribute('href') ?? '')
             .filter(href => href.includes('/permalink/'));
           const postLink = permalinkLinks.length > 0
             ? permalinkLinks[0]
-            : Array.from(postLinkElements)
+            : postLinkElements
                 .map(el => el.getAttribute('href') ?? '')
                 .find(href => !href.includes('help/')) || '';
 
