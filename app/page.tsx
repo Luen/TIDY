@@ -69,6 +69,24 @@ export default function Home() {
               <span className="text-sm text-gray-500 mt-2">Centre for Climate Safety</span>
             </li>
             <li className="bg-white p-4 rounded-md shadow flex flex-col items-start">
+              <Link href="https://www.townsvillebulletin.com.au/news/townsville/tidys-dave-dudley-wants-government-action-on-townsvilles-illegal-dumping/news-story/fb2530ab66949edf21679f6abfe5b756" className="text-blue-600 hover:text-blue-800 transition-colors flex items-center space-x-3">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2 2a1 1 0 001.414-1.414L11 10.586V6z" clipRule="evenodd" />
+                </svg>
+                <span className="text-lg font-medium">&apos;Lazy, grubby people&apos;: Call for crackdown on illegal dumping</span>
+              </Link>
+              <span className="text-sm text-gray-500 mt-2">Townsville Bulletin</span>
+            </li>
+            <li className="bg-white p-4 rounded-md shadow flex flex-col items-start">
+              <Link href="https://www.drytropicshealthywaters.org/post/tidy-up-townsville-saving-a-shaw-rd-reserve" className="text-blue-600 hover:text-blue-800 transition-colors flex items-center space-x-3">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2 2a1 1 0 001.414-1.414L11 10.586V6z" clipRule="evenodd" />
+                </svg>
+                <span className="text-lg font-medium">TIDY Up Townsville: Saving a Shaw Rd reserve</span>
+              </Link>
+              <span className="text-sm text-gray-500 mt-2">Healthy Waters Partnership for the Dry Tropics</span>
+            </li>
+            <li className="bg-white p-4 rounded-md shadow flex flex-col items-start">
               <Link href="https://wanderstories.space/leave-no-trace/" className="text-blue-600 hover:text-blue-800 transition-colors flex items-center space-x-3">
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2 2a1 1 0 001.414-1.414L11 10.586V6z" clipRule="evenodd" />

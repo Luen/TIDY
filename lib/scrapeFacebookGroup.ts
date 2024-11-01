@@ -5,7 +5,8 @@ import { chromium } from 'playwright-core';
 import fs from 'fs';
 import path from 'path';
 
-const cookiesPath = path.join(process.cwd(), 'facebook-cookies.json');
+const cookiesPath = path.join(__dirname, '..', 'facebook-cookies.json');
+const postsPath = path.join(__dirname, '..', 'facebook-posts.json');
 
 interface Post {
   postLink: string;
@@ -67,6 +68,7 @@ export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] 
 
       // Check if login was successful
       const loginStillRequired = await page.locator("text=You must log in to continue.").count();
+      console.log('Login still required:', loginStillRequired);
       if (loginStillRequired > 0) {
         console.log("'You must log in to continue.' message still found after login attempt. Aborting...");
         return { posts: [] };
@@ -75,10 +77,10 @@ export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] 
         console.log('Saving cookies after successful login...');
         const cookies = await context.cookies();
         fs.writeFileSync(cookiesPath, JSON.stringify(cookies, null, 2));
-        console.log('Cookies saved successfully');
+        console.log('Cookies saved successfully at:', cookiesPath);
       }
     } else {
-      console.log('Login not required, using stored cookies');
+      console.log('Login not required');
     }
 
     // Remove login prompt or any modal if present
@@ -122,8 +124,8 @@ export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] 
             .replace(/<!--.*?-->/g, '')
             .trim();
           const seeMore = 'See more';
-          if (content.trim().endsWith(seeMore)) {
-            content = content.trim().slice(0, content.length - seeMore.length).trim();
+          if (content.endsWith(seeMore)) {
+            content = content.slice(0, content.length - seeMore.length).trim() + "...";
           }
 
           const authorElement = post.querySelector('h2 strong span');
@@ -152,8 +154,16 @@ export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] 
         .filter(post => post.author && post.content);
     });
 
+    let previousPosts: Post[] = [];
+    if (fs.existsSync(postsPath)) {
+      previousPosts = JSON.parse(fs.readFileSync(postsPath, 'utf-8'));
+    }
+    const allPosts = [...new Set([...previousPosts, ...posts])];
+    fs.writeFileSync(postsPath, JSON.stringify(allPosts, null, 2));
+    console.log('Posts saved successfully at:', postsPath);
+
     return {
-      posts: posts,
+      posts: allPosts,
     };
   } catch (error) {
     console.error('An error occurred during scraping:', error);
