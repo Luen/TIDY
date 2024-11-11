@@ -7,8 +7,20 @@ interface Post {
   postLink: string;
   author: string;
   content: string;
-  time: string;
+  timestamp: string;
   imageUrls?: string[];
+}
+
+function formatDistanceToNow(date: Date) {
+  const diff = Date.now() - date.getTime();
+  const seconds = Math.floor(diff / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) return `${days}d`;
+  if (hours > 0) return `${hours}h`;
+  return `${minutes}m`;
 }
 
 function PostCard({ post }: { post: Post }) {
@@ -20,22 +32,25 @@ function PostCard({ post }: { post: Post }) {
             <AvatarFallback>{post.author[0]}</AvatarFallback>
           </Avatar>
           <CardTitle>{post.author}</CardTitle>
-          <p className="text-gray-500">{post.time}</p>
+          <span className="text-gray-500 text-sm">{formatDistanceToNow(new Date(parseInt(post.timestamp) * 1000))} ago</span>
         </div>
       </CardHeader>
       <CardContent>
         <p className="mb-4">{post.content}</p>
         <div className={`grid gap-2 ${post.imageUrls?.length === 1 ? 'grid-cols-1' : post.imageUrls?.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
-        {post.imageUrls && post.imageUrls.map((image, index) => (
-          <Image 
-            key={index}
-            src={image} 
-            alt="Facebook Post image" 
-            className="rounded-lg"
-            width={200}
-            height={200}
-          />
-        ))}
+        {post.imageUrls?.map((url, index) => {
+          //const filename = encodeURIComponent(url)+'.jpg';
+          //src={/images/${filename}}
+          return (
+            <Image 
+              key={index}
+              src={url}
+              alt="Post image"
+              width={200}
+              height={200}
+            />
+          );
+        })}
         </div>
         {post.postLink && (
           <a href={post.postLink} target="_blank" className="text-blue-500 hover:underline">View on Facebook</a>
