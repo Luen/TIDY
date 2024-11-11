@@ -25,16 +25,18 @@ function PostCard({ post }: { post: Post }) {
       </CardHeader>
       <CardContent>
         <p className="mb-4">{post.content}</p>
+        <div className={`grid gap-2 ${post.imageUrls?.length === 1 ? 'grid-cols-1' : post.imageUrls?.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
         {post.imageUrls && post.imageUrls.map((image, index) => (
           <Image 
             key={index}
             src={image} 
             alt="Facebook Post image" 
-            className="rounded-lg mb-4"
+            className="rounded-lg"
             width={200}
             height={200}
           />
         ))}
+        </div>
         {post.postLink && (
           <a href={post.postLink} target="_blank" className="text-blue-500 hover:underline">View on Facebook</a>
         )}
