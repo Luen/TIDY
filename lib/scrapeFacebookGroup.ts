@@ -23,7 +23,7 @@ interface Post {
 
 export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] }> {
   const browser = await chromium.launch({
-    headless: false,
+    headless: true,
   });
 
   try {
