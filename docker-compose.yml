@@ -8,3 +8,4 @@ services:
       - NEXT_BUILD_TIMEOUT=180000
       - FACEBOOK_EMAIL=your_facebook_email
       - FACEBOOK_PASSWORD=your_facebook_password
+    restart: unless-stopped
