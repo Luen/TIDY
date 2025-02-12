@@ -121,7 +121,11 @@ export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] 
       let loginButtonClicked = false;
       for (const selector of loginButtonSelectors) {
         if (await page.$(selector)) {
-          await page.click(selector);
+          // Wait for navigation after clicking login
+          await Promise.all([
+            page.waitForNavigation({ waitUntil: 'networkidle' }),
+            page.click(selector)
+          ]);
           loginButtonClicked = true;
           break;
         }
@@ -130,13 +134,64 @@ export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] 
         throw new Error('Login button not found.');
       }
 
-      // Wait for successful login
-      const locatorElement = page.locator('h1[dir="auto"].html-h1').first();
-      await expect(locatorElement).toHaveText("TIDY Up Townsville Group", { timeout: 15000 });
-
+      // Wait a moment for any redirects to complete
       await page.waitForTimeout(5000);
+
+      // Debug: Save the page HTML to a file
+      const debugHtml = await page.content();
+      fs.writeFileSync(path.join(__dirname, '..', 'debug-page.html'), debugHtml);
+      console.log('Debug HTML saved to debug-page.html');
+      
+      // Debug: Log all h1 elements and save to file
+      try {
+        const allH1s = await page.evaluate(() => {
+          const h1Elements = document.querySelectorAll('h1');
+          return Array.from(h1Elements).map(el => ({
+            text: el.innerText,
+            html: el.innerHTML,
+            attributes: Object.fromEntries([...el.attributes].map(attr => [attr.name, attr.value]))
+          }));
+        });
+        
+        fs.writeFileSync(
+          path.join(__dirname, '..', 'debug-h1s.json'), 
+          JSON.stringify(allH1s, null, 2)
+        );
+        console.log('H1 elements debug info saved to debug-h1s.json');
+      } catch (error) {
+        console.error('Error capturing H1 elements:', error);
+      }
+
+      // Save current page state
+      const debugInfo = {
+        url: page.url(),
+        title: await page.title(),
+        timestamp: new Date().toISOString()
+      };
+      fs.writeFileSync(
+        path.join(__dirname, '..', 'debug-error.json'),
+        JSON.stringify(debugInfo, null, 2)
+      );
+      
+      // Try to find the group title with a more flexible approach
+      const groupTitleLocator = page.locator('h1');
+      const titleCount = await groupTitleLocator.count();
+      if (titleCount > 0) {
+        for (let i = 0; i < titleCount; i++) {
+          const titleText = await groupTitleLocator.nth(i).textContent();
+          if (titleText?.includes('TIDY Up Townsville')) {
+            console.log('Found group title:', titleText);
+            break;
+          }
+        }
+      }
+
+      // Check if we're still on a login page
       const loginStillRequired = await page.locator("text=You must log in to continue.").count();
-      if (loginStillRequired > 0) return { posts: [] };
+      if (loginStillRequired > 0) {
+        console.log('Login still required after attempt');
+        return { posts: [] };
+      }
       
       const cookies = await context.cookies();
       fs.writeFileSync(cookiesPath, JSON.stringify(cookies, null, 2));
@@ -147,13 +202,73 @@ export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] 
       if (modal) (modal as HTMLElement).click();
     });
     
-    await page.waitForSelector('div[role="feed"]', { timeout: 10000 });
+    console.log('Waiting for feed to load...');
+    
+    // Save debug info before waiting for feed
+    const preFeedDebug = {
+      url: page.url(),
+      title: await page.title(),
+      html: await page.content()
+    };
+    fs.writeFileSync(
+      path.join(__dirname, '..', 'debug-pre-feed.json'),
+      JSON.stringify(preFeedDebug, null, 2)
+    );
 
+    // Try multiple selectors that might indicate we're on the group page
+    const possibleSelectors = [
+      'div[role="feed"]',
+      'div[role="main"]',
+      '[aria-label="Timeline"]',
+      '[aria-label="Content"]',
+      'div[data-pagelet="GroupFeed"]'
+    ];
+
+    let feedFound = false;
+    for (const selector of possibleSelectors) {
+      try {
+        console.log(`Trying to find selector: ${selector}`);
+        await page.waitForSelector(selector, { timeout: 5000 });
+        console.log(`Found selector: ${selector}`);
+        feedFound = true;
+        break;
+      } catch (error) {
+        console.log(`Selector ${selector} not found`);
+      }
+    }
+
+    if (!feedFound) {
+      console.error('Could not find any feed-related elements. Current page state:');
+      const debugState = {
+        url: page.url(),
+        title: await page.title(),
+        visibleElements: await page.evaluate(() => {
+          return Array.from(document.querySelectorAll('*'))
+            .filter(el => el.getBoundingClientRect().height > 0 && el.getBoundingClientRect().width > 0)
+            .map(el => ({
+              tag: el.tagName,
+              id: el.id,
+              className: el.className,
+              role: el.getAttribute('role'),
+              ariaLabel: el.getAttribute('aria-label')
+            }));
+        })
+      };
+      fs.writeFileSync(
+        path.join(__dirname, '..', 'debug-feed-error.json'),
+        JSON.stringify(debugState, null, 2)
+      );
+      throw new Error('Could not find feed element after login');
+    }
+
+    // If we found the feed, proceed with scrolling
+    console.log('Feed found, starting to scroll...');
     for (let i = 0; i < 10; i++) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       await page.evaluate(() => {
         window.scrollBy(0, window.innerHeight*2);
       });
+      console.log(`Scroll iteration ${i + 1}/10 completed`);
     }
 
     const posts = await page.$$eval('div[role="feed"] > div', elements => {
