@@ -1,6 +1,5 @@
 'use server';
 
-import { expect } from '@playwright/test';
 import { chromium } from 'playwright-core';
 import fs from 'fs';
 import path from 'path';
@@ -232,7 +231,7 @@ export async function scrapeFacebookGroup(url: string): Promise<{ posts: Post[] 
         console.log(`Found selector: ${selector}`);
         feedFound = true;
         break;
-      } catch (error) {
+      } catch {
         console.log(`Selector ${selector} not found`);
       }
     }
