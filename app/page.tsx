@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import FacebookPosts from '@/components/FacebookPosts';
 import Links from '@/components/Links';
 import Contact from '@/components/Contact';
 
@@ -105,7 +104,6 @@ export default function Home() {
             </li>
           </ul>
         </div>
-        <FacebookPosts />
         <Image 
           src="/images/TIDY-Up-Townsville-3-original.jpg"
           alt="Illegal dumping in Townsville"
