@@ -6,5 +6,6 @@
         "maxage",
         "sparticuz",
         "Yobo"
-    ]
+    ],
+    "snyk.advanced.autoSelectOrganization": true
 }
