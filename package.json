@@ -29,7 +29,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.17",
+    "@tailwindcss/postcss": "^4.1.18",
     "@types/cheerio": "^0.22.35",
     "@types/node": "^20",
     "@types/react": "19.2.10",
@@ -40,7 +40,7 @@
     "eslint-config-next": "16.1.6",
     "playwright": "^1.48.2",
     "postcss": "^8",
-    "tailwindcss": "^4.1.17",
+    "tailwindcss": "^4.1.18",
     "typescript": "^5",
     "webpack": "^5.95.0"
   },
