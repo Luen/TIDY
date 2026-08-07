@@ -1,33 +1,41 @@
-# Stage 1: Base image with Bun and Playwright
-FROM mcr.microsoft.com/playwright:v1.48.1-jammy AS base
+# syntax=docker/dockerfile:1
 
-# Install unzip and other required dependencies for Bun
-RUN apt-get update && apt-get install -y unzip && apt-get clean
+# Next.js standalone app (bun.lockb). No Playwright usage in this project —
+# previous Playwright base (~3GB) was leftover from next-self-host scaffolding.
 
-# Install Bun
-RUN curl -fsSL https://bun.sh/install | bash
-ENV PATH="/root/.bun/bin:$PATH"
-
-# Stage 2: Install dependencies
-FROM base AS deps
+# --- deps: lockfile-first install for cache ---
+FROM oven/bun:1.3-debian AS deps
 WORKDIR /app
 COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile
 
-# Stage 3: Build the application
-FROM base AS builder
+# --- build ---
+FROM oven/bun:1.3-debian AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN bun run build
 
-# Stage 4: Production server
-FROM base AS runner
+# --- runtime: Node matches Next standalone's intended runner ---
+FROM node:22-bookworm-slim AS runner
 WORKDIR /app
-ENV NODE_ENV=production
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
 
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+
+RUN groupadd --system --gid 1001 nodejs \
+  && useradd --system --uid 1001 --gid nodejs -l nextjs
+
+# Writable .next for prerender/image cache at runtime
+RUN mkdir .next && chown nextjs:nodejs .next
+
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
 EXPOSE 3000
-CMD ["bun", "run", "server.js"]
+CMD ["node", "server.js"]

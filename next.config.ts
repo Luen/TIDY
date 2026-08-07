@@ -3,9 +3,10 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   // Increase build time limit
   staticPageGenerationTimeout: 100,
-  // Recommended: this will reduce output
-  // Docker image size by 80%+
-  output: 'standalone',
+  // Standalone is for Docker self-hosting only. On Vercel + Next 16.3,
+  // output:'standalone' with the platform adapter skips next-server.js.nft.json
+  // and onBuildComplete fails with ENOENT (vercel/next.js#96646).
+  output: process.env.VERCEL ? undefined : 'standalone',
   // Optional: bring your own cache handler
   // cacheHandler: path.resolve('./cache-handler.mjs'),
   // cacheMaxMemorySize: 0, // Disable default in-memory caching
