@@ -1,0 +1,20 @@
+# TIDY Up
+> TIDY Up (Townsville Illegal Dumping Yobo's Clean-ups) raises awareness of illegal dumping in Townsville, organises community clean-ups, and advocates for stronger action against environmental crime.
+
+The site shares the mission of founder Dave Dudley: illegal dumping is a community problem, not only a council problem. TIDY Up encourages reporting, contacting elected representatives, and supporting transfer stations and dump vouchers in growth areas. Contact: tidytsv@gmail.com.
+
+## Pages
+- [Home](https://tidyup.work/): Mission statement, contact details, and related coverage of illegal dumping in Townsville
+
+## Community
+- [TIDY Up Townsville (Facebook group)](https://www.facebook.com/groups/1044042929275742/): Primary Facebook group for Townsville clean-ups and dumping reports
+- [TIDY Up Townsville (Facebook page)](https://www.facebook.com/TidyUpTSV): Official Facebook page
+- [TIDY Up Townsville (Instagram)](https://www.instagram.com/townsvilletidy/): Instagram updates from clean-ups and dumping hotspots
+
+## Optional
+- [ABC News: community clean-up group](https://www.abc.net.au/news/2020-06-05/test-illegal-dumping-community/12042764): Coverage of Townsville illegal dumping tackled by the community group
+- [Townsville City Council: dumping hot spot](https://www.townsville.qld.gov.au/about-council/news-and-publications/media-releases/2023/april/council-installs-gates-boulders-at-illegal-dumping-hot-spot): Council response with gates and boulders at a dumping site
+- [Townsville Bulletin: call for crackdown](https://www.townsvillebulletin.com.au/news/townsville/tidys-dave-dudley-wants-government-action-on-townsvilles-illegal-dumping/news-story/fb2530ab66949edf21679f6abfe5b756): Dave Dudley calling for government action on illegal dumping
+- [Healthy Waters Partnership: Shaw Rd reserve](https://www.drytropicshealthywaters.org/post/tidy-up-townsville-saving-a-shaw-rd-reserve): TIDY Up Townsville saving a Shaw Rd reserve
+- [How to Leave No Trace](https://wanderstories.space/leave-no-trace/): Related Leave No Trace guidance
+- [GitHub repository](https://github.com/Luen/TIDY): Source code for this website
