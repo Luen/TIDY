@@ -3,8 +3,6 @@ import Image from 'next/image';
 import Links from '@/components/Links';
 import Contact from '@/components/Contact';
 
-export const revalidate = 3600; //86400; // Revalidate once a day (in seconds)
-
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
