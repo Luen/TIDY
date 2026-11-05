@@ -5,7 +5,14 @@
 
 version: 2
 updates:
-  - package-ecosystem: "pnpm" # See documentation for possible values
+  - package-ecosystem: "npm" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+
+  # Monthly checks for Docker base images
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    target-branch: "main"
