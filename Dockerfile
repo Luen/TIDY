@@ -4,13 +4,13 @@
 # previous Playwright base (~3GB) was leftover from next-self-host scaffolding.
 
 # --- deps: lockfile-first install for cache ---
-FROM oven/bun:1.3-debian AS deps
+FROM oven/bun:1.4-debian AS deps
 WORKDIR /app
 COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile
 
 # --- build ---
-FROM oven/bun:1.3-debian AS builder
+FROM oven/bun:1.4-debian AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
